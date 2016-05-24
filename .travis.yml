@@ -5,11 +5,9 @@ matrix:
     - os: linux
     - os: osx
 
-script:
-  - ./waf configure build
-  - ./waf configure build --test_build
-  - sudo ./waf install
-  - python ./test_driver.py
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install python judy libarchive; fi
 
 addons:
   apt:
@@ -18,6 +16,9 @@ addons:
     - libjudy-dev
     - pkg-config
 
-before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install python judy libarchive; fi
+script:
+  - ./waf configure build
+  - ./waf configure build --test_build
+  - sudo ./waf install
+  - python ./test_driver.py
+
