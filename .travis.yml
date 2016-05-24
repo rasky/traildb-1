@@ -1,5 +1,17 @@
 language: c
-script: ./waf configure build
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+    - os: linux
+    - os: osx
+
+script:
+  - ./waf configure build
+  - ./waf configure build install --test_build
+  - ./test_driver.py
 
 addons:
   apt:
@@ -8,3 +20,6 @@ addons:
     - libjudy-dev
     - pkg-config
 
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install judy libarchive; fi
